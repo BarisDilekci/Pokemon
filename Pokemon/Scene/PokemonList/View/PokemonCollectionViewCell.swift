@@ -52,11 +52,13 @@ class PokemonCollectionViewCell: UICollectionViewCell {
             pokemonName.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
-    func configure(with name: String?, pokemonID: Int?) {
+   
+    // PokemonCollectionViewCell içinde configure fonksiyonu
+    func configure(with name: String?, pokemonID: String?) {
         pokemonName.text = name ?? "Unknown Pokemon"
         
-        if let pokemonID = pokemonID {
-            let imageURLString = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(pokemonID).png"
+        if let pokemonIDString = pokemonID, let id = Int(pokemonIDString) {
+            let imageURLString =  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(id).png"
             if let url = URL(string: imageURLString) {
                 pokemonImage.kf.setImage(with: url)
             } else {

@@ -18,3 +18,9 @@ struct Result: Decodable {
     let name: String
     let url: String
 }
+
+extension Result {
+    var pokemonID: String {
+        URL(string: url)?.lastPathComponent ?? ""
+    }
+}
