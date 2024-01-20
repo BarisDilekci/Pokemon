@@ -8,8 +8,7 @@
 import Foundation
 
 protocol INetworkService {
-    func fetchPokemonData(completion: @escaping (Swift.Result<Pokemon, Error>) -> ())
-    //func fetchPokemonSprite(id: String) -> URL?
+    func fetchPokemonData(completion: @escaping (Swift.Result<PokemonList, Error>) -> ())
 }
 
 final class NetworkService {
@@ -18,7 +17,7 @@ final class NetworkService {
 }
 
 extension NetworkService: INetworkService {
-    func fetchPokemonData(completion: @escaping (Swift.Result<Pokemon, Error>) -> ()) {
+    func fetchPokemonData(completion: @escaping (Swift.Result<PokemonList, Error>) -> ()) {
         let endpoint = EndPoint.fetchPokemonData
         networkManager.request(endpoint, completion: completion)
     }

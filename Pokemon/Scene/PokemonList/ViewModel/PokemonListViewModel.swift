@@ -25,20 +25,13 @@ extension PokemonListViewModel {
         networkService.fetchPokemonData { result in
             switch result {
             case .success(let success):
-                // Eğer API'nin dönüş türü bir liste ise, burada diziyi güncelleyin.
-                self.pokemons = [success]
+                print(result)
+                self.pokemons = success.results
                 self.delegate?.didSuccess()
             case .failure(let error):
                 self.delegate?.didErrorList(error: error.localizedDescription)
             }
         }
     }
-    
-    func fetchPokemonSprite(id: String) -> URL? {
-        // İlk Pokemon'un ID'sini kullanarak URL oluşturun
-        guard let firstPokemonID = pokemons.first?.results.first?.pokemonID else {
-            return nil
-        }
-        return URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(firstPokemonID).png")
-    }
+
 }

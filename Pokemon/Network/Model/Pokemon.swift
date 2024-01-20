@@ -7,20 +7,21 @@
 
 import Foundation
 
-struct Pokemon: Decodable {
-    let count: Int
-    let next: String
-    let results: [Result]
+struct PokemonList: Decodable {
+    
+    let results: [Pokemon]
 }
 
-// MARK: - Result
-struct Result: Decodable {
+struct Pokemon: Decodable {
+    
     let name: String
     let url: String
-}
-
-extension Result {
-    var pokemonID: String {
-        URL(string: url)?.lastPathComponent ?? ""
+    
+    var id: Int? {
+        return Int(url.split(separator: "/").last?.description ?? "0")
+    }
+    
+    var imageUrl: URL? {
+        return URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(id ?? 0).png")
     }
 }

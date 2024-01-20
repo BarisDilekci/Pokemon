@@ -5,8 +5,9 @@
 //  Created by Baris Dilekci on 15.12.2023.
 //
 import UIKit
+import Kingfisher
 
-final class PokemonList: UIViewController  {
+final class PokemonListViewController: UIViewController  {
 
     // MARK: Properties
     private let reuseIdentifier = "PokemonCell"
@@ -17,6 +18,7 @@ final class PokemonList: UIViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+
     }
     
        init() {
@@ -40,7 +42,7 @@ final class PokemonList: UIViewController  {
 }
 
 // MARK: - Layouts
-extension PokemonList {
+extension PokemonListViewController {
     private func style() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -61,9 +63,9 @@ extension PokemonList {
 
 
 // MARK: - PokemonViewModel
-extension PokemonList : IPokemonListViewModel {
+extension PokemonListViewController : IPokemonListViewModel {
     func didErrorList(error: String) {
-        print("error")
+        print(error)
     }
     
     func didSuccess() {
@@ -75,7 +77,7 @@ extension PokemonList : IPokemonListViewModel {
 
 
 // MARK: - UICollectionViewDataSource
-extension PokemonList : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension PokemonListViewController : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -88,13 +90,14 @@ extension PokemonList : UICollectionViewDelegate, UICollectionViewDataSource, UI
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PokemonCollectionViewCell
         
-        // Güvenli bir şekilde Pokemon'u al
-        guard let pokemon = viewModel.pokemons.first?.results[indexPath.item] else {
-            return cell
-        }
+
+        let pokemon = viewModel.pokemons[indexPath.row]
+
+        cell.pokemonImage.kf.setImage(with: pokemon.imageUrl)
+        cell.pokemonName.text = pokemon.name
 
         // PokemonCollectionViewCell'i yapılandır
-        cell.configure(with: pokemon.name, pokemonID: pokemon.pokemonID)
+        //cell.configure(with: pokemon.name, pokemonID: pokemon.pokemonID)
 
         return cell
     }
