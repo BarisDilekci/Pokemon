@@ -90,15 +90,9 @@ extension PokemonListViewController : UICollectionViewDelegate, UICollectionView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PokemonCollectionViewCell
         
-
         let pokemon = viewModel.pokemons[indexPath.row]
-
         cell.pokemonImage.kf.setImage(with: pokemon.imageUrl)
         cell.pokemonName.text = pokemon.name
-
-        // PokemonCollectionViewCell'i yapılandır
-        //cell.configure(with: pokemon.name, pokemonID: pokemon.pokemonID)
-
         return cell
     }
 

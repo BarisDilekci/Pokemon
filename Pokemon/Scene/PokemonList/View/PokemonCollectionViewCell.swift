@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-class PokemonCollectionViewCell: UICollectionViewCell {
+final class PokemonCollectionViewCell: UICollectionViewCell {
     let pokemonImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -52,21 +52,4 @@ class PokemonCollectionViewCell: UICollectionViewCell {
             pokemonName.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
-   
-//    // PokemonCollectionViewCell içinde configure fonksiyonu
-//    func configure(with name: String?, pokemonID: String?) {
-//        pokemonName.text = name ?? "Unknown Pokemon"
-//        
-//        if let pokemonIDString = pokemonID, let id = Int(pokemonIDString) {
-//            let imageURLString =  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(id).png"
-//            if let url = URL(string: imageURLString) {
-//                pokemonImage.kf.setImage(with: url)
-//            } else {
-//                pokemonImage.image = UIImage(named: "defaultImage")
-//            }
-//        } else {
-//            pokemonImage.image = UIImage(named: "defaultImage")
-//        }
-//    }
-
 }

@@ -21,6 +21,4 @@ extension NetworkService: INetworkService {
         let endpoint = EndPoint.fetchPokemonData
         networkManager.request(endpoint, completion: completion)
     }
-    
-  
 }

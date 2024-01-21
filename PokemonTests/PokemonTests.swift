@@ -11,8 +11,7 @@ import XCTest
 final class PokemonTests: XCTestCase, IPokemonListViewModel {
 
     var fetchExpectation: XCTestExpectation?
-
-
+    
     //MARK: SERVICE TEST
     func test_fetch_pokemon_data() throws {
         let networkService = NetworkService()
