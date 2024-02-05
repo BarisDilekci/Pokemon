@@ -38,11 +38,14 @@ final class PokemonCollectionViewCell: UICollectionViewCell {
     func configure(with viewModel: PokemonCollectionViewCellViewModel) {
         self.pokemonName.text = viewModel.name
         
-        if let url = URL(string: viewModel.imageUrl) {
-            self.pokemonImage.kf.setImage(with: url)
-        }
+       self.pokemonImage.kf.setImage(with: viewModel.imageUrl)
         
+        
+            
+
+    
     }
+
     private func setupViews() {
         addSubview(pokemonImage)
         addSubview(pokemonName)

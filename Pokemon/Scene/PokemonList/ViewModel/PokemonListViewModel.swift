@@ -10,7 +10,7 @@ import Foundation
 
 struct PokemonCollectionViewCellViewModel {
     let name: String
-    let imageUrl: String
+    let imageUrl: URL
 }
 
 

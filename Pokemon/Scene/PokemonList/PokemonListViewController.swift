@@ -77,7 +77,7 @@ extension PokemonListViewController : UICollectionViewDelegate, UICollectionView
                 as? PokemonCollectionViewCell
         else { return UICollectionViewCell() }
         let pokemon = viewModel?.getPokemon(indexPath: indexPath)
-        let cellViewModel = PokemonCollectionViewCellViewModel(name: pokemon?.name ?? "", imageUrl: "")
+        let cellViewModel = PokemonCollectionViewCellViewModel(name: pokemon?.name ?? "" , imageUrl: (pokemon?.imageUrl ?? URL(string: "default_url_string"))!)
         cell.configure(with: cellViewModel)
 
         return cell
