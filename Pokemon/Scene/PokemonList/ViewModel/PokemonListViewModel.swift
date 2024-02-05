@@ -7,17 +7,29 @@
 
 import Foundation
 
-protocol IPokemonListViewModel {
-    func didErrorList(error: String)
-    func didSuccess()
+
+struct PokemonCollectionViewCellViewModel {
+    let name: String
+    let imageUrl: String
 }
 
+
 final class PokemonListViewModel {
-    private let networkService = NetworkService.shared
+    private let networkService : INetworkService
+    private var pokemons: [Pokemon] = []
     
-    var pokemons: [Pokemon] = [] // Pokemon dizisi
+    init(networkService: INetworkService) {
+        self.networkService = networkService
+        fetchPokemonData()
+    }
     
-    var delegate: IPokemonListViewModel?
+    var numberOfItemsInSection : Int {
+        pokemons.count
+    }
+    
+    func getPokemon(indexPath: IndexPath) -> Pokemon {
+        return pokemons[indexPath.row]
+    }
 }
 
 extension PokemonListViewModel {
@@ -27,9 +39,8 @@ extension PokemonListViewModel {
             case .success(let success):
                 print(result)
                 self.pokemons = success.results
-                self.delegate?.didSuccess()
             case .failure(let error):
-                self.delegate?.didErrorList(error: error.localizedDescription)
+                print(error)
             }
         }
     }

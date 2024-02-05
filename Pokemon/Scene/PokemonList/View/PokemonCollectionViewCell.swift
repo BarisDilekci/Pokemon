@@ -9,14 +9,14 @@ import UIKit
 import Kingfisher
 
 final class PokemonCollectionViewCell: UICollectionViewCell {
-    let pokemonImage: UIImageView = {
+   private  let pokemonImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    let pokemonName: UILabel = {
+    private let pokemonName: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         label.textAlignment = .left
@@ -35,6 +35,9 @@ final class PokemonCollectionViewCell: UICollectionViewCell {
         setupViews()
     }
     
+//    func configure(with: viewModel: PokemonCollectionViewCellViewModel) {
+//        
+//    }
     private func setupViews() {
         addSubview(pokemonImage)
         addSubview(pokemonName)

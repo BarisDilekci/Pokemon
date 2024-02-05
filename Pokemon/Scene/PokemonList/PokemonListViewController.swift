@@ -12,7 +12,7 @@ final class PokemonListViewController: UIViewController  {
     // MARK: Properties
     private let reuseIdentifier = "PokemonCell"
     private var collectionView: UICollectionView
-    private let viewModel = PokemonListViewModel()
+   // private let viewModel = PokemonListViewModel()
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -36,8 +36,7 @@ final class PokemonListViewController: UIViewController  {
     
     private func setup() {
         style()
-        viewModel.delegate = self
-        viewModel.fetchPokemonData()
+
     }
 }
 
@@ -62,18 +61,6 @@ extension PokemonListViewController {
 
 
 
-// MARK: - PokemonViewModel
-extension PokemonListViewController : IPokemonListViewModel {
-    func didErrorList(error: String) {
-        print(error)
-    }
-    
-    func didSuccess() {
-        DispatchQueue.main.async {
-            self.collectionView.reloadData()
-        }
-    }
-}
 
 
 // MARK: - UICollectionViewDataSource
@@ -84,15 +71,12 @@ extension PokemonListViewController : UICollectionViewDelegate, UICollectionView
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.pokemons.count ?? 0
+        return 1
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PokemonCollectionViewCell
-        
-        let pokemon = viewModel.pokemons[indexPath.row]
-        cell.pokemonImage.kf.setImage(with: pokemon.imageUrl)
-        cell.pokemonName.text = pokemon.name
+
         return cell
     }
 
