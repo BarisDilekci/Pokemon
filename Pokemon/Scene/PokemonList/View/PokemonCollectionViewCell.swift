@@ -16,7 +16,7 @@ final class PokemonCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
     
-    private let pokemonName: UILabel = {
+    private var pokemonName: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         label.textAlignment = .left
@@ -35,9 +35,14 @@ final class PokemonCollectionViewCell: UICollectionViewCell {
         setupViews()
     }
     
-//    func configure(with: viewModel: PokemonCollectionViewCellViewModel) {
-//        
-//    }
+    func configure(with viewModel: PokemonCollectionViewCellViewModel) {
+        self.pokemonName.text = viewModel.name
+        
+        if let url = URL(string: viewModel.imageUrl) {
+            self.pokemonImage.kf.setImage(with: url)
+        }
+        
+    }
     private func setupViews() {
         addSubview(pokemonImage)
         addSubview(pokemonName)
