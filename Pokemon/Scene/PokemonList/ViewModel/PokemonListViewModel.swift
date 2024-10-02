@@ -34,15 +34,17 @@ final class PokemonListViewModel {
 
 extension PokemonListViewModel {
     func fetchPokemonData() {
-        networkService.fetchPokemonData { result in
-            switch result {
-            case .success(let success):
-                print(result)
-                self.pokemons = success.results
-            case .failure(let error):
-                print(error)
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            self?.networkService.fetchPokemonData { result in
+                switch result {
+                case .success(let success):
+                    print(result)
+                    self?.pokemons = success.results
+                case .failure(let error):
+                    print(error)
+
+                }
             }
         }
     }
-
 }
