@@ -82,5 +82,20 @@ extension PokemonListViewController: UITableViewDelegate, UITableViewDataSource 
     // MARK: - UITableViewDelegate (optional)
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        let pokemon = viewModel.getPokemon(indexPath: indexPath)
+        
+        viewModel.fetchPokemonDetail(id: pokemon.id ?? 1) { [weak self] result in
+            switch result {
+            case .success(let pokemonDetail):
+                DispatchQueue.main.async {
+                    let detailViewModel = PokemonDetailViewModel(pokemon: pokemonDetail)
+                    let detailViewController = PokemonDetailViewController(viewModel: detailViewModel)
+                    self?.navigationController?.pushViewController(detailViewController, animated: true)
+                }
+            case .failure(let error):
+                print("Error fetching details: \(error.localizedDescription)")
+            }
+        }
     }
 }

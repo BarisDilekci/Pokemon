@@ -8,48 +8,80 @@
 import XCTest
 @testable import Pokemon
 
-final class PokemonTests: XCTestCase, IPokemonListViewModel {
-
-    var fetchExpectation: XCTestExpectation?
+final class PokemonTests: XCTestCase {
     
-    //MARK: SERVICE TEST
-    func test_fetch_pokemon_data() throws {
-        let networkService = NetworkService()
+    var mockNetworkManager : MockNetworkManager!
+    
+    override func setUp() {
+        super.setUp()
+        mockNetworkManager = MockNetworkManager()
+    }
+    
+    override func tearDown() {
+        mockNetworkManager = nil
+        super.tearDown()
+    }
+    
+    func testSuccessfulRequest() {
+        let expectedPokemons = PokemonList(results: [
+            Pokemon(name: "Bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/1/")
+        ])
         
-        let expectation = self.expectation(description: "Fetch Pokemon Data")
+        mockNetworkManager.result = .success(expectedPokemons)
         
-        networkService.fetchPokemonData { result in
+        let endpoint = EndPoint.fetchPokemonData
+        
+        mockNetworkManager.request(endpoint) { (result: Result<PokemonList, Error>) in
             switch result {
-            case .success(let pokemonResponse):
-                for pokemon in pokemonResponse.results {
-                    XCTAssertFalse(pokemon.name.isEmpty, "Pokemon name should not be empty")
-                    XCTAssertGreaterThan(pokemon.name.count, 0, "Pokemon name should have a positive length")
-                }
-                expectation.fulfill()
+            case .success(let pokemonList):
+                XCTAssertEqual(pokemonList.results.count  , expectedPokemons.results.count)
+                XCTAssertEqual(pokemonList.results[0].name, expectedPokemons.results[0].name)
             case .failure(let error):
-                XCTFail("Error: \(error.localizedDescription)")
+                XCTFail("Beklenmedik bir hata alındı: \(error)")
             }
         }
-
-        waitForExpectations(timeout: 5, handler: nil)
-    }
-    
-    //MARK: LIST TEST
-    func test_fetch_viewmodel_data() throws {
-        let viewModel = PokemonListViewModel()
-        viewModel.delegate = self
-        fetchExpectation = expectation(description: "Fetch Pokemon Data")
-        viewModel.fetchPokemonData()
-        waitForExpectations(timeout: 5, handler: nil)
         
     }
     
-    func didErrorList(error: String) {
-        XCTFail("Error occurred: \(error)")
-        fetchExpectation?.fulfill()
+    func testFailedRequest() {
+        let expectedError = NSError(domain: "TestError", code: 1, userInfo: nil)
+        mockNetworkManager.result = .failure(expectedError)
+        
+        let endpoint = EndPoint.fetchPokemonData
+        
+        mockNetworkManager.request(endpoint) { (result: Result<PokemonList, Error>) in
+            switch result {
+            case .success:
+                XCTFail("Başarılı bir sonuç beklenmiyordu.")
+            case .failure(let error):
+                XCTAssertEqual((error as NSError).domain, expectedError.domain)
+                XCTAssertEqual((error as NSError).code, expectedError.code)
+            }
+        }
     }
     
-    func didSuccess() {
-        fetchExpectation?.fulfill()
+    func testFetchPokemonDataRequest() {
+        let endpoint = EndPoint.fetchPokemonData
+        
+        let expectedURLString = "https://pokeapi.co/api/v2/pokemon/?offset=0&limit=25"
+        let expectedMethod = HTTPMethodType.get.rawValue
+        
+        let request = endpoint.request()
+        
+        XCTAssertEqual(request.url?.absoluteString, expectedURLString)
+        XCTAssertEqual(request.httpMethod, expectedMethod)
+    }
+    
+    func testFetchPokemonDetailRequest() {
+        let pokemonID = 1
+        let endpoint = EndPoint.fetchPokemonDetail(id: pokemonID)
+        
+        let expectedURLString = "https://pokeapi.co/api/v2/pokemon/1/"
+        let expectedMethod = HTTPMethodType.get.rawValue
+        
+        let request = endpoint.request()
+        
+        XCTAssertEqual(request.url?.absoluteString, expectedURLString)
+        XCTAssertEqual(request.httpMethod, expectedMethod)
     }
 }

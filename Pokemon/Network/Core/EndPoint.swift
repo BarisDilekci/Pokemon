@@ -18,6 +18,7 @@ protocol EndPointProtocol {
 
 enum EndPoint {
     case fetchPokemonData
+    case fetchPokemonDetail(id: Int)
 }
 
 extension EndPoint : EndPointProtocol {
@@ -29,12 +30,16 @@ extension EndPoint : EndPointProtocol {
         switch self {
         case .fetchPokemonData:
             return PATH
+        case .fetchPokemonDetail(id: let id):
+            return "\(PATH)\(id)/" // PATH ile birleştir
         }
     }
     
     var method: HTTPMethodType {
         switch self {
         case .fetchPokemonData:
+            return .get
+        case .fetchPokemonDetail(id: let id):
             return .get
         }
     }
@@ -46,6 +51,8 @@ extension EndPoint : EndPointProtocol {
                 URLQueryItem(name: "offset", value: "0"),
                 URLQueryItem(name: "limit", value: "25")
             ]
+        case .fetchPokemonDetail(id: let id):
+            return nil
         }
     }
     
