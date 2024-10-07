@@ -16,9 +16,12 @@ enum PokemonListViewBuilder {
 }
 
 final class PokemonListViewController: UIViewController {
-
+    
     // MARK: - Properties
+    private let viewModel: PokemonListViewModel
     private let reuseIdentifier = "PokemonCell"
+    
+    //MARK: - UI Elements
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
@@ -28,12 +31,19 @@ final class PokemonListViewController: UIViewController {
         return tableView
     }()
     
-    private let viewModel: PokemonListViewModel
-
+    
     // MARK: - Lifecycle
     init(viewModel: PokemonListViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        
+        viewModel.onPokemonDetailFetched = { [weak self] pokemonDetail in
+            DispatchQueue.main.async {
+                let detailViewModel = PokemonDetailViewModel(pokemon: pokemonDetail)
+                let detailViewController = PokemonDetailViewController(viewModel: detailViewModel)
+                self?.navigationController?.pushViewController(detailViewController, animated: true)
+            }
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -43,8 +53,11 @@ final class PokemonListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        viewModel.viewDidLoad()
     }
     
+    
+    //MARK: Functions
     private func setup() {
         view.addSubview(tableView)
         NSLayoutConstraint.activate([
@@ -60,42 +73,16 @@ final class PokemonListViewController: UIViewController {
 extension PokemonListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberOfItemsInSection
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? PokemonTableViewCell else {
-            return UITableViewCell()
-        }
-        
-        let pokemon = viewModel.getPokemon(indexPath: indexPath)
-        let cellViewModel = PokemonCollectionViewCellViewModel(
-            name: pokemon.name ?? "Unknown",
-            imageUrl: pokemon.imageUrl ?? URL(string: "default_url_string")!
-        )
-        cell.accessoryType = .disclosureIndicator
-        cell.configure(with: cellViewModel)
-
-        return cell
+        return viewModel.numberOfItemsInSection()
     }
     
-    // MARK: - UITableViewDelegate (optional)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return viewModel.cellForRow(at: indexPath, tableView: tableView)
+    }
+    
+    // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        let pokemon = viewModel.getPokemon(indexPath: indexPath)
-        
-        viewModel.fetchPokemonDetail(id: pokemon.id ?? 1) { [weak self] result in
-            switch result {
-            case .success(let pokemonDetail):
-                DispatchQueue.main.async {
-                    let detailViewModel = PokemonDetailViewModel(pokemon: pokemonDetail)
-                    let detailViewController = PokemonDetailViewController(viewModel: detailViewModel)
-                    self?.navigationController?.pushViewController(detailViewController, animated: true)
-                }
-            case .failure(let error):
-                print("Error fetching details: \(error.localizedDescription)")
-            }
-        }
+        viewModel.didSelectRow(at: indexPath)
     }
 }
