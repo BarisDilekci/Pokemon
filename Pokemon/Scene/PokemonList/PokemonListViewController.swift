@@ -5,7 +5,7 @@
 //  Created by Baris Dilekci on 15.12.2023.
 //
 import UIKit
-import Kingfisher
+
 
 enum PokemonListViewBuilder {
     static func generate() -> UIViewController {
@@ -38,10 +38,11 @@ final class PokemonListViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         
         viewModel.onPokemonDetailFetched = { [weak self] pokemonDetail in
+            guard let self = self else { return }
             DispatchQueue.main.async {
                 let detailViewModel = PokemonDetailViewModel(pokemon: pokemonDetail)
                 let detailViewController = PokemonDetailViewController(viewModel: detailViewModel)
-                self?.navigationController?.pushViewController(detailViewController, animated: true)
+                self.navigationController?.pushViewController(detailViewController, animated: true)
             }
         }
     }
@@ -54,6 +55,11 @@ final class PokemonListViewController: UIViewController {
         super.viewDidLoad()
         setup()
         viewModel.viewDidLoad()
+    }
+    
+    deinit {
+        tableView.delegate = nil
+        tableView.dataSource = nil
     }
     
     

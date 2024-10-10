@@ -11,9 +11,9 @@ final class PokemonDetailViewController: UIViewController {
     
     private let viewModel: PokemonDetailViewModel
     
-    private let nameLabel = UILabel()
-    private let heightLabel = UILabel()
-    private let weightLabel = UILabel()
+    private lazy var  nameLabel = UILabel()
+    private lazy var  heightLabel = UILabel()
+    private lazy var  weightLabel = UILabel()
     
     init(viewModel: PokemonDetailViewModel) {
         self.viewModel = viewModel

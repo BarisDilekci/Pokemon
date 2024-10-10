@@ -9,7 +9,7 @@ import UIKit
 import Kingfisher
 
 final class PokemonTableViewCell: UITableViewCell {
-    private let pokemonImage: UIImageView = {
+    private lazy var pokemonImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = 8
@@ -18,7 +18,7 @@ final class PokemonTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    private let pokemonName: UILabel = {
+    private lazy var  pokemonName: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
         label.textAlignment = .left
@@ -39,7 +39,15 @@ final class PokemonTableViewCell: UITableViewCell {
     
     func configure(with viewModel: PokemonCollectionViewCellViewModel) {
         self.pokemonName.text = viewModel.name
-        self.pokemonImage.kf.setImage(with: viewModel.imageUrl)
+        self.pokemonImage.kf.setImage(
+            with: viewModel.imageUrl,
+            options: [
+                .processor(ResizingImageProcessor(referenceSize: CGSize(width: 100, height: 100))),
+                .scaleFactor(UIScreen.main.scale),
+                .transition(.fade(0.2)),
+                .cacheOriginalImage
+            ]
+        )
     }
     
     private func setupViews() {
