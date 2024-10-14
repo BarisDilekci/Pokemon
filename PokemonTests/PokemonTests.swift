@@ -22,7 +22,7 @@ final class PokemonTests: XCTestCase {
         super.tearDown()
     }
     
-    func testSuccessfulRequest() {
+    func test_successful_equest() {
         let expectedPokemons = PokemonList(results: [
             Pokemon(name: "Bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/1/")
         ])
@@ -43,7 +43,7 @@ final class PokemonTests: XCTestCase {
         
     }
     
-    func testFailedRequest() {
+    func test_failed_request() {
         let expectedError = NSError(domain: "TestError", code: 1, userInfo: nil)
         mockNetworkManager.result = .failure(expectedError)
         
@@ -60,7 +60,7 @@ final class PokemonTests: XCTestCase {
         }
     }
     
-    func testFetchPokemonDataRequest() {
+    func test_fetch_pokemon_data_request() {
         let endpoint = EndPoint.fetchPokemonData
         
         let expectedURLString = "https://pokeapi.co/api/v2/pokemon/?offset=0&limit=25"
@@ -72,7 +72,7 @@ final class PokemonTests: XCTestCase {
         XCTAssertEqual(request.httpMethod, expectedMethod)
     }
     
-    func testFetchPokemonDetailRequest() {
+    func test_fetch_pokemon_detail_request() {
         let pokemonID = 1
         let endpoint = EndPoint.fetchPokemonDetail(id: pokemonID)
         
